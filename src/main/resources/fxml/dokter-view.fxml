@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane dividerPositions="0.3" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.iqbal.ui.controller.DokterController">
+    <items>
+        <VBox spacing="10" minWidth="260">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <Label fx:id="formTitleLabel" text="Tambah Data Dokter" styleClass="form-title"/>
+            <TextField fx:id="namaField" promptText="Nama"/>
+            <TextField fx:id="spesialisasiField" promptText="Spesialisasi"/>
+            <TextField fx:id="noStrField" promptText="No STR"/>
+            <TextField fx:id="noTeleponField" promptText="No Telepon"/>
+            <HBox spacing="8">
+                <Button fx:id="simpanButton" text="Simpan" onAction="#handleSimpan"/>
+                <Button fx:id="hapusButton" text="Hapus" onAction="#handleHapus" disable="true"/>
+                <Button fx:id="resetButton" text="Reset" onAction="#handleReset"/>
+            </HBox>
+        </VBox>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <TextField fx:id="searchField" promptText="Cari nama / spesialisasi..."/>
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNama" text="Nama" prefWidth="170"/>
+                    <TableColumn fx:id="colSpesialisasi" text="Spesialisasi" prefWidth="150"/>
+                    <TableColumn fx:id="colNoStr" text="No STR" prefWidth="130"/>
+                    <TableColumn fx:id="colNoTelepon" text="Telepon" prefWidth="120"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </items>
+</SplitPane>

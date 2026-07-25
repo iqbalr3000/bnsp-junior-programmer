@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane dividerPositions="0.35" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.iqbal.ui.controller.RekamMedisController">
+    <items>
+        <ScrollPane fitToWidth="true" minWidth="300">
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16"/>
+                </padding>
+                <Label text="Tambah Rekam Medis" styleClass="form-title"/>
+                <ComboBox fx:id="pasienCombo" promptText="Pilih Pasien" maxWidth="Infinity"/>
+                <ComboBox fx:id="dokterCombo" promptText="Pilih Dokter" maxWidth="Infinity"/>
+                <ComboBox fx:id="reservasiCombo" promptText="Reservasi (opsional, walk-in jika kosong)" maxWidth="Infinity"/>
+                <DatePicker fx:id="tanggalPeriksaPicker" promptText="Tanggal Periksa" maxWidth="Infinity"/>
+                <TextArea fx:id="diagnosisArea" promptText="Diagnosis" prefRowCount="2" wrapText="true"/>
+                <TextArea fx:id="catatanArea" promptText="Catatan" prefRowCount="2" wrapText="true"/>
+
+                <Separator/>
+                <Label text="Resep Obat" styleClass="form-title"/>
+                <ComboBox fx:id="obatCombo" promptText="Pilih Obat" maxWidth="Infinity"/>
+                <HBox spacing="8">
+                    <TextField fx:id="jumlahField" promptText="Jumlah" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="dosisField" promptText="Dosis" HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Button fx:id="tambahRespButton" text="+ Tambah ke Resep" maxWidth="Infinity" onAction="#handleTambahResep"/>
+                <TableView fx:id="resepTable" prefHeight="160">
+                    <columns>
+                        <TableColumn fx:id="colObatNama" text="Obat" prefWidth="150"/>
+                        <TableColumn fx:id="colJumlah" text="Jumlah" prefWidth="70"/>
+                        <TableColumn fx:id="colDosis" text="Dosis" prefWidth="120"/>
+                        <TableColumn fx:id="colAksi" text="Aksi" prefWidth="80" resizable="false" sortable="false"/>
+                    </columns>
+                </TableView>
+
+                <Separator/>
+                <HBox spacing="8">
+                    <Button fx:id="simpanButton" text="Simpan Rekam Medis" onAction="#handleSimpan"/>
+                    <Button fx:id="resetButton" text="Reset" onAction="#handleReset"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colTanggal" text="Tanggal" prefWidth="100"/>
+                    <TableColumn fx:id="colPasien" text="Pasien" prefWidth="150"/>
+                    <TableColumn fx:id="colDokter" text="Dokter" prefWidth="150"/>
+                    <TableColumn fx:id="colDiagnosis" text="Diagnosis" prefWidth="220"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </items>
+</SplitPane>

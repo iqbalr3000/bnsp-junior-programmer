@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.iqbal.ui.controller.DashboardController">
+    <VBox spacing="20" styleClass="dashboard-root">
+        <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
+        <Label fx:id="welcomeLabel" styleClass="title-label"/>
+        <Label text="Ringkasan data rumah sakit saat ini" styleClass="text-caption"/>
+
+        <FlowPane hgap="16" vgap="16">
+            <VBox alignment="CENTER" spacing="4" styleClass="stat-card">
+                <Label fx:id="totalPasienLabel" styleClass="stat-value"/>
+                <Label text="Total Pasien" styleClass="stat-caption"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="stat-card">
+                <Label fx:id="totalDokterLabel" styleClass="stat-value"/>
+                <Label text="Total Dokter" styleClass="stat-caption"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="stat-card">
+                <Label fx:id="totalObatLabel" styleClass="stat-value"/>
+                <Label text="Jenis Obat" styleClass="stat-caption"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="stat-card, stat-card-accent">
+                <Label fx:id="reservasiHariIniLabel" styleClass="stat-value"/>
+                <Label text="Reservasi Hari Ini" styleClass="stat-caption"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="stat-card">
+                <Label fx:id="reservasiMenungguLabel" styleClass="stat-value"/>
+                <Label text="Reservasi Menunggu" styleClass="stat-caption"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="stat-card">
+                <Label fx:id="totalRekamMedisLabel" styleClass="stat-value"/>
+                <Label text="Total Rekam Medis" styleClass="stat-caption"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" styleClass="stat-card, stat-card-warning">
+                <Label fx:id="obatStokMenipisLabel" styleClass="stat-value"/>
+                <Label text="Obat Stok Menipis (&lt;10)" styleClass="stat-caption"/>
+            </VBox>
+        </FlowPane>
+    </VBox>
+</ScrollPane>

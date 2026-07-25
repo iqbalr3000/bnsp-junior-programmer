@@ -1,0 +1,16 @@
+# Maven
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+
+# Local environment overrides (jangan commit secret production)
+application-*.local.properties

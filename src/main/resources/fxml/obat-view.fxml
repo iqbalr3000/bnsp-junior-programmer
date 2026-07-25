@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane dividerPositions="0.3" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.iqbal.ui.controller.ObatController">
+    <items>
+        <VBox spacing="10" minWidth="260">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <Label fx:id="formTitleLabel" text="Tambah Data Obat" styleClass="form-title"/>
+            <TextField fx:id="kodeObatField" promptText="Kode Obat"/>
+            <TextField fx:id="namaField" promptText="Nama"/>
+            <TextField fx:id="satuanField" promptText="Satuan (contoh: tablet, botol)"/>
+            <TextField fx:id="hargaField" promptText="Harga"/>
+            <TextField fx:id="stokField" promptText="Stok"/>
+            <TextArea fx:id="deskripsiArea" promptText="Deskripsi" prefRowCount="3" wrapText="true"/>
+            <HBox spacing="8">
+                <Button fx:id="simpanButton" text="Simpan" onAction="#handleSimpan"/>
+                <Button fx:id="hapusButton" text="Hapus" onAction="#handleHapus" disable="true"/>
+                <Button fx:id="resetButton" text="Reset" onAction="#handleReset"/>
+            </HBox>
+        </VBox>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+            <TextField fx:id="searchField" promptText="Cari kode / nama obat..."/>
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colKodeObat" text="Kode" prefWidth="100"/>
+                    <TableColumn fx:id="colNama" text="Nama" prefWidth="170"/>
+                    <TableColumn fx:id="colSatuan" text="Satuan" prefWidth="100"/>
+                    <TableColumn fx:id="colHarga" text="Harga" prefWidth="100"/>
+                    <TableColumn fx:id="colStok" text="Stok" prefWidth="70"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </items>
+</SplitPane>
