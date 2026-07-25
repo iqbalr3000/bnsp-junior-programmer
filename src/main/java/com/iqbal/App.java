@@ -1,9 +1,12 @@
 package com.iqbal;
 
 import atlantafx.base.theme.PrimerLight;
+import com.iqbal.ai.AssistantToolExecutor;
+import com.iqbal.ai.GeminiClientImpl;
 import com.iqbal.config.AppConfig;
 import com.iqbal.config.DataSourceProvider;
 import com.iqbal.config.FlywayRunner;
+import com.iqbal.repository.impl.ChatMessageRepositoryImpl;
 import com.iqbal.repository.impl.DokterRepositoryImpl;
 import com.iqbal.repository.impl.ObatRepositoryImpl;
 import com.iqbal.repository.impl.PasienRepositoryImpl;
@@ -11,6 +14,7 @@ import com.iqbal.repository.impl.RekamMedisObatRepositoryImpl;
 import com.iqbal.repository.impl.RekamMedisRepositoryImpl;
 import com.iqbal.repository.impl.ReservasiRepositoryImpl;
 import com.iqbal.repository.impl.StaffRepositoryImpl;
+import com.iqbal.service.AiAssistantService;
 import com.iqbal.service.AuthService;
 import com.iqbal.service.DokterService;
 import com.iqbal.service.ObatService;
@@ -27,6 +31,8 @@ import javafx.stage.Stage;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class App extends Application {
 
@@ -66,6 +72,9 @@ public class App extends Application {
     @Override
     public void stop() {
         stopResourceMonitor();
+        if (appContext != null) {
+            appContext.getAiExecutor().shutdownNow();
+        }
         DataSourceProvider.close();
     }
 
@@ -77,6 +86,7 @@ public class App extends Application {
         RekamMedisRepositoryImpl rekamMedisRepository = new RekamMedisRepositoryImpl(dataSource);
         RekamMedisObatRepositoryImpl rekamMedisObatRepository = new RekamMedisObatRepositoryImpl(dataSource);
         StaffRepositoryImpl staffRepository = new StaffRepositoryImpl(dataSource);
+        ChatMessageRepositoryImpl chatMessageRepository = new ChatMessageRepositoryImpl(dataSource);
 
         PasienService pasienService = new PasienService(pasienRepository);
         DokterService dokterService = new DokterService(dokterRepository);
@@ -86,8 +96,35 @@ public class App extends Application {
                 dataSource, rekamMedisRepository, rekamMedisObatRepository, obatRepository, reservasiRepository);
         AuthService authService = new AuthService(staffRepository);
 
+        AppConfig config = AppConfig.get();
+        AiAssistantService aiAssistantService = buildAiAssistantService(
+                config, chatMessageRepository, pasienService, dokterService, obatService, reservasiService, rekamMedisService);
+        ExecutorService aiExecutor = Executors.newSingleThreadExecutor();
+
         return new AppContext(pasienService, dokterService, obatService, reservasiService,
-                rekamMedisService, authService, stage);
+                rekamMedisService, authService, aiAssistantService, aiExecutor, stage);
+    }
+
+    /**
+     * AI Assistant adalah fitur opsional — kalau GEMINI_API_KEY belum diset, aplikasi tetap
+     * harus bisa jalan penuh untuk 5 modul CRUD lain, cukup fitur AI Assistant yang nonaktif.
+     */
+    private AiAssistantService buildAiAssistantService(AppConfig config,
+                                                         ChatMessageRepositoryImpl chatMessageRepository,
+                                                         PasienService pasienService,
+                                                         DokterService dokterService,
+                                                         ObatService obatService,
+                                                         ReservasiService reservasiService,
+                                                         RekamMedisService rekamMedisService) {
+        String apiKey = config.getGeminiApiKey();
+        if (apiKey == null || apiKey.isBlank()) {
+            return null;
+        }
+        GeminiClientImpl geminiClient = new GeminiClientImpl(apiKey, config.getGeminiModel());
+        AssistantToolExecutor toolExecutor = new AssistantToolExecutor(
+                pasienService, dokterService, obatService, reservasiService, rekamMedisService);
+        return new AiAssistantService(
+                chatMessageRepository, geminiClient, toolExecutor, config.getGeminiContextWindowSize());
     }
 
     private void stopResourceMonitor() {

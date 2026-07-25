@@ -24,6 +24,7 @@ public class MainLayoutController implements ContextAware {
     @FXML private Button obatButton;
     @FXML private Button reservasiButton;
     @FXML private Button rekamMedisButton;
+    @FXML private Button aiAssistantButton;
     @FXML private StatusBarController statusBarController;
 
     private AppContext context;
@@ -79,6 +80,12 @@ public class MainLayoutController implements ContextAware {
     private void showRekamMedis() {
         navigator.navigateTo("/fxml/rekam-medis-view.fxml");
         highlight(rekamMedisButton);
+    }
+
+    @FXML
+    private void showAiAssistant() {
+        navigator.navigateTo("/fxml/chat-view.fxml");
+        highlight(aiAssistantButton);
     }
 
     @FXML

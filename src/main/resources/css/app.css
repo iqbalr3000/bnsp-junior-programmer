@@ -88,3 +88,21 @@
     -fx-text-fill: -color-fg-muted;
     -fx-font-size: 12px;
 }
+
+.chat-header {
+    -fx-border-color: transparent transparent -color-border-default transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.chat-bubble-user {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: white;
+    -fx-background-radius: 12 12 2 12;
+    -fx-padding: 8 12 8 12;
+}
+
+.chat-bubble-model {
+    -fx-background-color: -color-bg-inset;
+    -fx-background-radius: 12 12 12 2;
+    -fx-padding: 8 12 8 12;
+}

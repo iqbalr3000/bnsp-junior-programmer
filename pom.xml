@@ -25,6 +25,7 @@
         <logback.version>1.5.12</logback.version>
         <junit-bom.version>5.11.4</junit-bom.version>
         <mockito.version>5.18.0</mockito.version>
+        <google-genai.version>1.57.0</google-genai.version>
     </properties>
 
     <dependencyManagement>
@@ -35,6 +36,17 @@
                 <version>${junit-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!--
+              Pin Jackson supaya satu versi konsisten di seluruh classpath. Tanpa ini, Maven
+              "nearest wins" memilih jackson-core 2.15.2 (dari flyway-database-postgresql)
+              sementara jackson-databind 2.17.2 (dari google-genai) tetap terpakai, dan databind
+              2.17.2 memanggil API jackson-core yang tidak ada di 2.15.2 -> NoSuchMethodError saat runtime.
+            -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.17.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -86,6 +98,13 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
+        </dependency>
+
+        <!-- AI assistant -->
+        <dependency>
+            <groupId>com.google.genai</groupId>
+            <artifactId>google-genai</artifactId>
+            <version>${google-genai.version}</version>
         </dependency>
 
         <!-- Logging -->

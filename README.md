@@ -12,6 +12,7 @@ Aplikasi desktop untuk manajemen data rumah sakit — dibuat sebagai demonstrasi
 - Reservasi (booking pasien ke dokter, cegah bentrok jadwal dokter)
 - Rekam Medis + resep obat (stok obat otomatis berkurang saat resep dibuat, dalam satu transaksi JDBC)
 - Status bar pemantauan resource aplikasi (memory & koneksi database)
+- AI Assistant (Gemini) — tanya jawab berbasis data aplikasi lewat tool calling read-only (cari pasien/dokter, cek stok obat, reservasi hari ini, riwayat rekam medis), dengan sliding window context dan riwayat chat tersimpan per staff
 
 ## Tech Stack
 
@@ -23,6 +24,7 @@ Aplikasi desktop untuk manajemen data rumah sakit — dibuat sebagai demonstrasi
 | Database | PostgreSQL 16 (Docker) |
 | Migration | Flyway |
 | Keamanan password | BCrypt (jBCrypt) |
+| AI Assistant | Gemini API via official SDK [`google-genai`](https://github.com/googleapis/java-genai) |
 | Testing | JUnit 5 + Mockito |
 | Build | Maven |
 
@@ -35,6 +37,7 @@ model        -> POJO entitas (Pasien, Dokter, Obat, Reservasi, RekamMedis, Staff
 repository    -> interface + implementasi JDBC per entity (repository pattern, tanpa generic base class)
 service       -> validasi & business logic (termasuk transaksi manual resep obat + potong stok)
 config        -> AppConfig (env layering), DataSourceProvider (HikariCP), FlywayRunner
+ai            -> wrapper Gemini SDK (GeminiClient/Impl) + deklarasi & dispatch tool read-only (AssistantToolExecutor)
 ui            -> FXML + controller (JavaFX), dependency injection manual lewat AppContext + ContextAware
 ```
 
@@ -67,6 +70,8 @@ Composition root ada di `App.java` — semua repository & service di-instantiate
    Password: admin123
    ```
 
+Fitur **AI Assistant** butuh `GEMINI_API_KEY` (lihat bagian Konfigurasi Environment) — kalau belum diset, aplikasi tetap jalan normal untuk fitur lain, menu AI Assistant hanya akan menampilkan status nonaktif.
+
 ## Konfigurasi Environment
 
 Environment aktif ditentukan lewat variabel `APP_ENV` (`development` default kalau tidak di-set):
@@ -78,7 +83,16 @@ APP_ENV=staging mvn javafx:run
 Urutan resolusi konfigurasi (`AppConfig`):
 1. `application.properties` (default umum)
 2. `application-{env}.properties` (override sesuai environment — `development`/`staging`/`production`)
-3. Environment variable `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` (override terakhir, dipakai untuk secret di production — tidak perlu ditulis di file)
+3. Environment variable `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` / `GEMINI_API_KEY` (override terakhir, dipakai untuk secret — tidak pernah ditulis di file manapun)
+
+Contoh menjalankan dengan AI Assistant aktif:
+
+```bash
+export GEMINI_API_KEY=xxxxx
+mvn javafx:run
+```
+
+Property `gemini.model` (default `gemini-2.5-flash`) dan `gemini.contextWindowSize` (default `20` pesan — jumlah pesan terakhir yang di-assemble jadi context request ke Gemini, bukan pembatas riwayat yang ditampilkan di UI) bisa diubah di `application.properties`.
 
 ## Testing
 
@@ -97,6 +111,7 @@ Skema didefinisikan di `src/main/resources/db/migration/V1__init_schema.sql`:
 - `reservasi` — booking pasien ke dokter (unique index mencegah dokter double-booked di slot yang sama)
 - `rekam_medis` — hasil pemeriksaan (opsional terhubung ke reservasi)
 - `rekam_medis_obat` — resep obat per rekam medis (many-to-many rekam_medis ↔ obat)
+- `chat_message` (`V3`) — riwayat chat AI Assistant per staff (role USER/MODEL, `tool_trace` untuk audit tool call)
 
 ## Menghentikan / Membersihkan
 

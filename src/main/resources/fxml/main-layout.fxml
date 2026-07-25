@@ -33,6 +33,7 @@
             <Button fx:id="obatButton" text="Data Obat" maxWidth="Infinity" onAction="#showObat" styleClass="menu-button"/>
             <Button fx:id="reservasiButton" text="Reservasi" maxWidth="Infinity" onAction="#showReservasi" styleClass="menu-button"/>
             <Button fx:id="rekamMedisButton" text="Rekam Medis" maxWidth="Infinity" onAction="#showRekamMedis" styleClass="menu-button"/>
+            <Button fx:id="aiAssistantButton" text="AI Assistant" maxWidth="Infinity" onAction="#showAiAssistant" styleClass="menu-button"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Separator/>
             <Button text="Logout" maxWidth="Infinity" onAction="#handleLogout" styleClass="danger"/>
